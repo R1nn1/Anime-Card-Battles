@@ -1,0 +1,102 @@
+local ArrayField = loadstring(game:HttpGet("https://raw.githubusercontent.com/Hosvile/Refinement/main/MC%3AArrayfield%20Library"))()
+-- Documentation url: https://docs.sirius.menu/community/arrayfield
+
+local Window = ArrayField:CreateWindow({
+    Name = "Rinns Hub",
+    LoadingTitle = "Rinns Hub",
+    LoadingSubtitle = "Code by Rinn Ui by Sirius Ui remake by Hosvile",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "RinnsHubConfigs", -- Create a custom folder for your hub/game
+        FileName = "RinnsHub"
+    },
+    Discord = {
+        Enabled = true,
+        Invite = "Mt9F5nc8Tg", -- The Discord invite code, do not include discord.gg/
+        RememberJoins = false -- Set this to false to make them join the discord every time they load it up
+    },
+    KeySystem = false, -- Set this to true to use our key system
+    KeySettings = {
+        Title = "ArrayField",
+        Subtitle = "Key System",
+        Note = "Join the discord (discord.gg/sirius)",
+        FileName = "ArrayFieldsKeys",
+        SaveKey = false,
+        GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like ArrayField to get the key from
+        Key = {"Hello",'Bye'},
+        Actions = {
+            [1] = {
+                Text = 'Click here to copy the key link',
+                OnPress = function()
+                end,
+            }
+        },
+    }
+})
+
+local Tab = Window:CreateTab("Tab Example", 4483362458) -- Title, Image
+
+-- Variables to store the running threads
+local autoRollConnection
+local autoGetAllPotionsConnection
+
+Tab:CreateToggle({
+    Name = "Auto Roll",
+    Info = {
+        Title = 'Slider template',
+        Image = '12735851647',
+        Description = 'Just a slider for stuff',
+    },
+    CurrentValue = false,
+    Flag = "Toggle1", 
+    Callback = function(Value)
+        if Value then
+            -- Start auto rolling every 0.2 seconds
+            autoRollConnection = game:GetService("RunService").Stepped:Connect(function()
+                game:GetService("ReplicatedStorage").Remotes.RollEvent:FireServer()
+            end)
+        else
+            -- Stop auto rolling
+            if autoRollConnection then
+                autoRollConnection:Disconnect()
+                autoRollConnection = nil
+            end
+        end
+    end,
+})
+
+Tab:CreateToggle({
+    Name = "Auto Get All Potions",
+    Info = {
+        Title = 'Slider template',
+        Image = '12735851647',
+        Description = 'Just a slider for stuff',
+    },
+    CurrentValue = false,
+    Flag = "Toggle2", 
+    Callback = function(Value)
+        if Value then
+            -- Start auto getting all potions
+            autoGetAllPotionsConnection = game:GetService("RunService").Stepped:Connect(function()
+                local character = game.Players.LocalPlayer.Character
+                local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+                
+                if humanoidRootPart then
+                    for _, potion in pairs(game.Workspace.ActivePotions:GetChildren()) do
+                        local basePart = potion:FindFirstChild("Base")
+                        if basePart then
+                            humanoidRootPart.CFrame = basePart.CFrame
+                            wait(0.63) -- Wait 0.63 seconds before moving to the next base
+                        end
+                    end
+                end
+            end)
+        else
+            -- Stop auto getting all potions
+            if autoGetAllPotionsConnection then
+                autoGetAllPotionsConnection:Disconnect()
+                autoGetAllPotionsConnection = nil
+            end
+        end
+    end,
+})
