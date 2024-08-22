@@ -43,12 +43,12 @@ local autoGetAllPotionsConnection
 Tab:CreateToggle({
     Name = "Auto Roll",
     Info = {
-        Title = 'Slider template',
+        Title = 'Auto Roll',
         Image = '12735851647',
-        Description = 'Just a slider for stuff',
+        Description = 'Auto Rolls For You',
     },
     CurrentValue = false,
-    Flag = "Toggle1", 
+    Flag = "AutoRoll", 
     Callback = function(Value)
         if Value then
             -- Start auto rolling every 0.2 seconds
@@ -68,9 +68,9 @@ Tab:CreateToggle({
 Tab:CreateToggle({
     Name = "Auto Get All Potions",
     Info = {
-        Title = 'Slider template',
+        Title = 'Auto Get All Potions',
         Image = '12735851647',
-        Description = 'Just a slider for stuff',
+        Description = 'Auto gets all potions Spawned in or spawning in',
     },
     CurrentValue = false,
     Flag = "Toggle2", 
@@ -107,9 +107,9 @@ local obbyTimer = 0
 Tab:CreateToggle({
     Name = "Auto do obby",
     Info = {
-        Title = 'Auto Obby',
+        Title = 'Auto do Obby',
         Image = '12735851647',
-        Description = 'Automatically teleports to the Sword Block and interacts with the Proximity Prompt repeatedly.',
+        Description = 'Automatically does the obby that gives a luck boost',
     },
     CurrentValue = false,
     Flag = "Toggle3", 
