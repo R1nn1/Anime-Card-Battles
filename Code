@@ -100,3 +100,67 @@ Tab:CreateToggle({
         end
     end,
 })
+
+local autoDoObbyConnection
+local obbyTimer = 0
+
+Tab:CreateToggle({
+    Name = "Auto do obby",
+    Info = {
+        Title = 'Auto Obby',
+        Image = '12735851647',
+        Description = 'Automatically teleports to the Sword Block and interacts with the Proximity Prompt repeatedly.',
+    },
+    CurrentValue = false,
+    Flag = "Toggle3", 
+    Callback = function(Value)
+        if Value then
+            -- Teleport and fire proximity prompt immediately when the toggle is turned on
+            local function doObby()
+                local character = game.Players.LocalPlayer.Character
+                local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+
+                if humanoidRootPart then
+                    -- Find the SwordBlock inside ObbySword
+                    local obbySword = workspace:FindFirstChild("ObbySword")
+                    local swordBlockInObbySword = obbySword and obbySword:FindFirstChild("SwordBlock")
+                    
+                    if swordBlockInObbySword then
+                        -- Teleport to the SwordBlock inside ObbySword
+                        humanoidRootPart.CFrame = swordBlockInObbySword.CFrame
+                    end
+
+                    -- Find the SwordBlock in ObbySwordPrompt and fire the proximity prompt
+                    local obbySwordPrompt = workspace:FindFirstChild("ObbySwordPrompt")
+                    local swordBlockInPrompt = obbySwordPrompt and obbySwordPrompt:FindFirstChild("SwordBlock")
+                    
+                    if swordBlockInPrompt then
+                        local proximityPrompt = swordBlockInPrompt:FindFirstChildWhichIsA("ProximityPrompt")
+                        if proximityPrompt then
+                            fireproximityprompt(proximityPrompt)
+                        end
+                    end
+                end
+            end
+
+            -- Run immediately on toggle
+            doObby()
+
+            -- Set up the loop to repeat every 301 seconds
+            autoDoObbyConnection = game:GetService("RunService").Stepped:Connect(function(_, deltaTime)
+                obbyTimer = obbyTimer + deltaTime
+
+                if obbyTimer >= 301 then
+                    obbyTimer = 0 -- Reset the timer after the teleportation
+                    doObby() -- Run the obby task again
+                end
+            end)
+        else
+            if autoDoObbyConnection then
+                autoDoObbyConnection:Disconnect()
+                autoDoObbyConnection = nil
+                obbyTimer = 0 -- Reset the timer when toggled off
+            end
+        end
+    end,
+})
